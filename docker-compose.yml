@@ -10,3 +10,26 @@ services:
       - .:/rails
     ports:
       - "3100:3000"
+    env_file: ".env"
+    depends_on:
+      - redis_app
+      - redis_cloud
+      - redis_cloud1
+
+  redis_app:
+    image: redis
+    platform: linux/x86_64
+    ports:
+      - 6379:6379
+
+  redis_cloud:
+    image: redis
+    platform: linux/x86_64
+    ports:
+      - 6378:6379
+
+  redis_cloud1:
+    image: redis
+    platform: linux/x86_64
+    ports:
+      - 6377:6379

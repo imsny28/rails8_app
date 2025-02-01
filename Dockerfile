@@ -25,6 +25,10 @@ ENV RAILS_ENV="production" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development"
 
+# Set environment variable for Bundler credentials
+ARG BUNDLE_GEMS__CONTRIBSYS__COM
+ENV BUNDLE_GEMS__CONTRIBSYS__COM=${BUNDLE_GEMS__CONTRIBSYS__COM}
+
 # Throw-away build stage to reduce size of final image
 FROM base AS build
 

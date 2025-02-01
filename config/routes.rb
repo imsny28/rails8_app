@@ -1,3 +1,13 @@
+require "sidekiq-pro"
+require "sidekiq/pro/web"
+
+# Define Redis instances
+REDIS_INSTANCES = {
+  app:    "redis://redis_app:6379/0",
+  cloud:  "redis://redis_cloud:6379/0",
+  cloud1: "redis://redis_cloud1:6379/0"
+}.transform_values { |url| Sidekiq::RedisConnection.create(url: url) }
+
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -11,4 +21,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  # Dynamically mount Sidekiq Web UI for each Redis instance
+  REDIS_INSTANCES.each do |name, pool|
+    mount Sidekiq::Pro::Web.with(redis_pool: pool), at: "/sidekiq/#{name}", as: "sidekiq_#{name}"
+  end
 end

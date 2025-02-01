@@ -63,3 +63,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "sidekiq-pro", source: 'https://gems.contribsys.com/'
+gem "redis"
+gem "redis-namespace"
