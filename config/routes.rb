@@ -1,6 +1,14 @@
 require "sidekiq-pro"
 require "sidekiq/pro/web"
 
+class AuthenticatedUser
+  def self.call
+    # maybe call to Session.find_by should be here
+  
+    Current.session || raise(UnauthorizedError)
+  end
+end
+
 # Define Redis instances
 REDIS_INSTANCES = {
   app:    "redis://redis_app:6379/0",
@@ -9,6 +17,11 @@ REDIS_INSTANCES = {
 }.transform_values { |url| Sidekiq::RedisConnection.create(url: url) }
 
 Rails.application.routes.draw do
+  get "dashboard/index"
+  root 'dashboard#index'
+  resource :session
+  resources :passwords, param: :token
+  resources :posts
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -24,6 +37,8 @@ Rails.application.routes.draw do
 
   # Dynamically mount Sidekiq Web UI for each Redis instance
   REDIS_INSTANCES.each do |name, pool|
-    mount Sidekiq::Pro::Web.with(redis_pool: pool), at: "/sidekiq/#{name}", as: "sidekiq_#{name}"
+    constraints -> { Current.user || raise(UnauthorizedError) } do
+      mount Sidekiq::Pro::Web.with(redis_pool: pool), at: "/sidekiq/#{name}", as: "sidekiq_#{name}"
+    end
   end
 end

@@ -1,0 +1,10 @@
+<h1>Dashboard</h1>
+
+<% if Current.user.present? %>
+  <%= link_to "Sidekiq APP", sidekiq_app_path, target: "_blank", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-black underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+  <%= link_to "Sidekiq Cloud", sidekiq_cloud_path, target: "_blank", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-black underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+  <%= link_to "Sidekiq Cloud1", sidekiq_cloud1_path, target: "_blank", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-black underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+  <%= button_to "Sign out", session_path, method: :delete, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-black underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+<% else %>
+  <%= link_to "Sign in", new_session_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+<% end %>
